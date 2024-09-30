@@ -1,7 +1,75 @@
+# Server installation and starting
+-   `npm install`
+-   `npm run server`
+    
+# Currently available users to login
+    ```javascript
+        [
+            {
+               username: "manager01",
+                password: "manager01",
+            },
+             {
+                username: "agent01",
+                password: "agent007",
+            },
+             {
+                username: "roughhatch",
+                password: "agent02",
+            },
+             {
+                username: "saxcruciatus",
+                password: "agent03",
+            },
+             {
+                username: "filizabra",
+                password: "agent04",
+            },
+             {
+                username: "organiccarpenter",
+                password: "agent05",
+            },
+             {
+                username: "hoipolloiswindler",
+                password: "agent06",
+            },
+             {
+                username: "manager02",
+                password: "manager02",
+            }
+        ]
+    ```
 
-# Server endpoints
+# API methods
 
+## POST /auth/login
+    ```js
+        {
+            username: '',
+            password: ''
+        }
+    ```
+Response: 
 
+    ```js
+       {
+            accesToken: 'access_token', 
+            userId: 'user_id',
+            employeeId: 'employee_identificator, 
+            role: "user_role"
+        }
+    ```
+Errors: 
+   404 - `Invalid username or password`,
+
+The token is used in the Authorization header for methods that require authorization: `Authorization: Bearer TOKEN`, where we replace TOKEN with the value of the token we received. Each token lives  30 min. 
+
+If we request any method and it returns an error `Unauthorized`, it means that we forgot to provide the header with the token when calling the method.  
+
+## POST /auth/logout
+Logout also needs Authorization header. 
+
+## Data endpoints
 
 * GET all the data, POST new data object
     - `/users`;
@@ -25,75 +93,84 @@ To register a new user, follow this algorithm:
 3. Make a POST request to `users`.
 
 # Schemas
-  ## User:
+## LoginResponse:
+    ```typescript
+      interface LoginResponse{
+            accesToken: string, 
+            userId: string,
+            employeeId: string, 
+            role: "manager"|"agent"
+        }
+   ```
+## User:
    ```typescript
-      type User = {
-          id: string;
-          username: string;
-          password: string;
-          email: string;
-          role: string;
-          employeeId: string;
-          createdAt: string;
-          updatedAt: string;
+      interface User{
+          id: string,
+          username: string,
+          password: string,
+          email: string,
+          role: string,
+          employeeId: string,
+          createdAt: string,
+          updatedAt: string,
       }
    ```
-  ## Employee:
+## Employee:
    ```typescript
-      type Employee = {
-        id: string;
-        name: string;
-        age: number;
-        image: string;
+      interface Employee{
+        id: string,
+        name: string,
+        age: number,
+        image: string,
         contacts: {
-            phone: string;
-            email: string;
-        };
-        languages: string[];
-        gender: string;
-        position: string;
-        status: string;
+            phone: string,
+            email: string,
+        },
+        languages: string[],
+        gender: 'male'|'female',
+        position: string,
+        status: "free"|"on-break"|"busy",
         createdAt: string,
         updatedAt: string
     }
    ```
-   ## Clinent:
+## Client:
     ```typescript
-      type Client = {
-        id: string;
-        firstName: string;
-        lastName: string;
-        age: number;
-        gender: string;
-        image: string;
+      interface Client{
+        id: string,
+        firstName: string,
+        lastName: string,
+        age: number,
+        gender: 'male'|'female',
+        image: string,
         contacts: {
-            phone: string;
-            email: string;
-        };
-        notes: string[];
-        interactionsCount: number;
-        lastInteractionDate: string;
-        createdAt: string;
-        status: string;
-        updatedAt: string;
+            phone: string,
+            email: string,
+        },
+        notes: string[],
+        interactionsCount: number,
+        lastInteractionDate: string,
+        createdAt: string,
+        status: 'new'|'VIP'|'active'|'inactive'|'problematic',
+        updatedAt: string,
     }
    ```
-   ## Call
+## Call
     ```typescript
-      type Call =  {
-        id: string;
-        type: string;
-        state: string;
-        status: string;
-        callMood: string;
-        agentComment: string;
-        feedbackScore: number;
-        followUpRequired: boolean;
-        recordUrl: string;
-        clientId: string;
-        employeeId: string;
-        start: string;
-        end: string;
-        duration: number;
+      interface Call {
+        id: string,
+        type: 'outgoing'|'incoming',
+        state: 'accepted'|'missed',
+        status: 'completed_success'| 'completed_refuse'| 'callback'|'transfer',
+        callMood: 'positive'| 'negative'| 'neutral',
+        agentComment: string,
+        feedbackScore: number,
+        followUpRequired: boolean,
+        recordUrl: string,
+        clientId: string,
+        employeeId: string,
+        start: string,
+        end: string,
+        duration: number,
     }
 ```

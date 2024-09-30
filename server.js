@@ -61,14 +61,19 @@ server.post("/auth/login", (req, res) => {
   const { username, password } = req.body;
   const user = getUserByUserName(username.trim());
   if (!user || user.password !== password) {
-    return res.status(401).send("Invalid username or password");
+    return res.status(404).send("Invalid username or password");
   }
   const token = randomUUID();
   openSession(token, user.id);
 
   res
     .status(200)
-    .json({ accesToken: token, employeeId: user.employeeId, role: user.role });
+    .json({
+      accesToken: token,
+      userId: user.id,
+      employeeId: user.employeeId,
+      role: user.role,
+    });
 });
 
 server.post("/auth/logout", (req, res) => {
@@ -84,7 +89,7 @@ server.use((req, res, next) => {
   if (isAuthorized(req)) {
     next();
   } else {
-    res.sendStatus(401);
+    res.status(401).send("Unauthorized");
   }
 });
 

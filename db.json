@@ -118,7 +118,7 @@
       ],
       "gender": "diverse",
       "position": "Agent(operator)",
-      "status": "on-break",
+      "status": "busy",
       "createdAt": "2024-08-31T01:09:43.197Z",
       "updatedAt": "2024-09-23T15:54:39.595Z"
     },
@@ -178,7 +178,7 @@
       ],
       "gender": "female",
       "position": "Agent(operator)",
-      "status": "free",
+      "status": "busy",
       "createdAt": "2024-05-02T05:25:37.731Z",
       "updatedAt": "2024-05-02T21:29:17.533Z"
     },
@@ -218,7 +218,7 @@
       ],
       "gender": "diverse",
       "position": "Agent(operator)",
-      "status": "on-break",
+      "status": "busy",
       "createdAt": "2024-09-05T16:35:06.133Z",
       "updatedAt": "2024-09-06T01:00:51.408Z"
     },
