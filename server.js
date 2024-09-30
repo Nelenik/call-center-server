@@ -7,8 +7,9 @@ const __dirname = path.dirname(__filename);
 
 const server = jsonServer.create();
 const router = jsonServer.router(path.join(__dirname, "db.json"));
-const middlewares = jsonServer.defaults();
-
+const middlewares = jsonServer.defaults({
+  static: path.join(__dirname, "public"),
+});
 server.use(middlewares);
 
 server.use(jsonServer.bodyParser);
@@ -27,7 +28,6 @@ server.use(
     "/calls/:employeeId": "/calls?employeeId=:employeeId",
   })
 );
-server.use(jsonServer.defaults({ static: path.join(__dirname, "public") }));
 server.use(router);
 server.listen(4000, () => {
   console.log("JSON Server is running on http://localhost:4000");
