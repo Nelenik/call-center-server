@@ -66,14 +66,12 @@ server.post("/auth/login", (req, res) => {
   const token = randomUUID();
   openSession(token, user.id);
 
-  res
-    .status(200)
-    .json({
-      accesToken: token,
-      userId: user.id,
-      employeeId: user.employeeId,
-      role: user.role,
-    });
+  res.status(200).json({
+    accesToken: token,
+    userId: user.id,
+    employeeId: user.employeeId,
+    role: user.role,
+  });
 });
 
 server.post("/auth/logout", (req, res) => {
@@ -82,7 +80,7 @@ server.post("/auth/logout", (req, res) => {
     closeSession(token);
     return res.status(200).json({ message: "Logged out successfully" });
   }
-  return res.status(404).json("Session not found");
+  return res.status(404).send("Session not found");
 });
 
 server.use((req, res, next) => {
