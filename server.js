@@ -27,6 +27,7 @@ server.use(
     "/calls/:employeeId": "/calls?employeeId=:employeeId",
   })
 );
+server.use(jsonServer.defaults({ static: path.join(__dirname, "public") }));
 server.use(router);
 server.listen(4000, () => {
   console.log("JSON Server is running on http://localhost:4000");
