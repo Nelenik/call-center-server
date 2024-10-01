@@ -49,7 +49,7 @@ const closeSession = (token) => {
 const openSession = (token, userId) => {
   sessions.set(token, userId);
   const sessionExpiryTime = 30 * 60 * 1000;
-  setTimeout(closeSession, sessionExpiryTime);
+  setTimeout(() => closeSession(token), sessionExpiryTime);
 };
 
 const isAuthorized = (req) => {

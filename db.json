@@ -79,6 +79,16 @@
       "createdAt": "2024-09-29T21:37:06.813Z",
       "updatedAt": "2024-09-29T21:37:06.813Z",
       "id": "gE5G4Ge"
+    },
+    {
+      "username": "rikitiki",
+      "password": "agent07",
+      "email": "rikitiki@hotmail.com",
+      "role": "agent",
+      "employeeId": "QhRnKdc",
+      "createdAt": "2024-10-01T09:05:56.658Z",
+      "updatedAt": "2024-10-01T09:05:56.658Z",
+      "id": "wS-BAtR"
     }
   ],
   "employees": [
@@ -240,6 +250,24 @@
       "createdAt": "2024-09-29T21:37:06.623Z",
       "updatedAt": "2024-09-29T21:37:06.623Z",
       "id": "OIH52Wu"
+    },
+    {
+      "name": "Riki Tiki",
+      "age": 20,
+      "image": "https://avatars.githubusercontent.com/u/66655051",
+      "contacts": {
+        "phone": "+28-1624-10484833",
+        "email": "rikitiki@hotmail.com"
+      },
+      "languages": [
+        "English"
+      ],
+      "gender": "female",
+      "position": "Agent(operator)",
+      "status": "free",
+      "createdAt": "2024-10-01T09:03:55.632Z",
+      "updatedAt": "2024-10-01T09:03:55.632Z",
+      "id": "QhRnKdc"
     }
   ],
   "clients": [
