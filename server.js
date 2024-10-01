@@ -2,7 +2,15 @@ import jsonServer from "json-server";
 import path from "path";
 import { fileURLToPath } from "url";
 import { randomUUID } from "crypto";
-import { readFileSync } from "fs";
+import {
+  setDevSession,
+  getUserByUserName,
+  getUsersProfile,
+  closeSession,
+  openSession,
+  getAuthHeaderParts,
+  isAuthorized,
+} from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +20,12 @@ const router = jsonServer.router(path.join(__dirname, "db.json"));
 const middlewares = jsonServer.defaults({
   static: path.join(__dirname, "public"),
 });
+
+//permanent session for dev (temp function)
+const DEV_TOKEN = "2078289c-73e5-4137-8ceb-96445633512c";
+const DEV_USER_ID = "57381626a500d7df59cc2f5c21323c3a";
+setDevSession(DEV_TOKEN, DEV_USER_ID);
+
 server.use(middlewares);
 
 server.use(jsonServer.bodyParser);
@@ -31,35 +45,9 @@ server.use(
   })
 );
 
-const sessions = new Map();
-
-const getDbScript = (property) => {
-  const db = JSON.parse(readFileSync("./db.json", "utf-8"));
-  return db[property];
-};
-
-const getUserByUserName = (username) => {
-  const users = getDbScript("users");
-  return users.find((el) => el.username === username);
-};
-const closeSession = (token) => {
-  sessions.delete(token);
-};
-
-const openSession = (token, userId) => {
-  sessions.set(token, userId);
-  const sessionExpiryTime = 30 * 60 * 1000;
-  setTimeout(() => closeSession(token), sessionExpiryTime);
-};
-
-const isAuthorized = (req) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
-  return token && sessions.has(token);
-};
-
 server.post("/auth/login", (req, res) => {
   const { username, password } = req.body;
-  const user = getUserByUserName(username.trim());
+  const user = getUserByUserName(username.trim(), router);
   if (!user || user.password !== password) {
     return res.status(404).send("Invalid username or password");
   }
@@ -68,19 +56,7 @@ server.post("/auth/login", (req, res) => {
 
   res.status(200).json({
     accesToken: token,
-    userId: user.id,
-    employeeId: user.employeeId,
-    role: user.role,
   });
-});
-
-server.post("/auth/logout", (req, res) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
-  if (token && sessions.has(token)) {
-    closeSession(token);
-    return res.status(200).json({ message: "Logged out successfully" });
-  }
-  return res.status(404).send("Session not found");
 });
 
 server.use((req, res, next) => {
@@ -89,6 +65,23 @@ server.use((req, res, next) => {
   } else {
     res.status(401).send("Unauthorized");
   }
+});
+
+server.get("/auth/profile", (req, res) => {
+  const { token } = getAuthHeaderParts(req);
+  const profile = getUsersProfile(token, router);
+  if (profile) {
+    return res.status(200).json(profile);
+  }
+});
+
+server.post("/auth/logout", (req, res) => {
+  const { token } = getAuthHeaderParts(req);
+  if (token === DEV_TOKEN) {
+    return res.status(200).json({ message: "Dev logged out" });
+  }
+  closeSession(token);
+  res.status(200).json({ message: "Logged out successfully" });
 });
 
 server.use(router);
