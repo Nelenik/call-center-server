@@ -14,7 +14,7 @@ const getUsersProfile = (token, router) => {
   if (!authorizedUserId) return;
   const users = router.db.get("users").value();
   const employees = router.db.get("employees").value();
-  const auth_data = users.find((u) => u.id === authorizedUserId);
+  const auth_data = { ...users.find((u) => u.id === authorizedUserId) };
   delete auth_data.password;
   const employee_data = employees.find((e) => e.id === auth_data.employeeId);
   return { auth_data, employee_data };
